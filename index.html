@@ -1,0 +1,238 @@
+<!DOCTYPE>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .row.content {
+            height: 100%;
+        }
+
+        .sidenav {
+            background-color: #9aded3;
+            height: 100%;
+        }
+
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+        /* On small screens, set height to 'auto' for sidenav and grid */
+
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {
+                height: auto;
+            }
+        }
+
+        .modal-header,
+        h4,
+        .close {
+            background-color: #85D1C5;
+            color: white !important;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .modal-footer {
+            background-color: #f9f9f9;
+        }
+    </style>
+    
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav">
+                <span class="glyphicons glyphicons-book-open"></span>
+                <a href="index.html">
+                    <h1>Guest Book <span class="glyphicon glyphicon-book"></span></h1>
+                </a>
+                <hr>
+                <ul class="nav nav-pills nav-stacked">
+                    <!--<li><a href="#modalLogin">Login</a></li>
+                    <li><a href="#modalRegister" data-toggle="tooltip" title="Register!">Don't have account?</a></li>-->
+                    <a href="#" data-toggle="modal" title="Login!" data-target="#modalLogin" style="font-size:20pt;">Login</a><br>
+                    <button id="btnRegis" data-toggle="modal" title="Register!" data-target="#modalRegister">Don't have account? Register here!</button><br>
+                    <a href="user.html" title="Skip">Skip!</a></button>
+                </ul><br>
+            </div>
+            <table id="tableGuestBook" class="table table-striped table-hover">
+            </table>
+        </div>
+    </div>
+    <div id="modalRegister" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 25px 40px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4><span class="glyphicon glyphicon-user"></span></span> Register</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="formLogin">
+                        <div class="form-group">
+                            <label for="username">Username: </label>
+                            <input type="text" class="form-control" id="username1" placeholder="Entry username">
+                        </div>
+                        <div class="form-group">
+                            <label for="fullname">Full Name: </label>
+                            <input type="text" class="form-control" id="fullname1" placeholder="Entry fullname">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email: </label>
+                            <input type="email" class="form-control" id="email" placeholder="Entry email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password: </label>
+                            <input type="password" class="form-control" id="password1" placeholder="Entry password">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmpass">Confirm Password: </label>
+                            <input type="password" class="form-control" id="confirm1" placeholder="Re-entry password">
+                        </div>
+                        <button type="submit" id="btnRegister" class="btn btn-success btn-block" style="background-color:#85D1C5">Register</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalLogin" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="padding: 25px 40px;">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4><span class="glyphicon glyphicon-lock"></span> Login</h4>
+                </div>
+                <div class="modal-body">
+                    <form id="formLogin">
+                        <div class="form-group">
+                            <label for="username2">Username: </label>
+                            <input type="text" class="form-control" id="loginusername" placeholder="Entry username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password2">Password: </label>
+                            <input type="password" class="form-control" id="loginpassword" placeholder="Entry password">
+                        </div>
+                        <button type="submit" id="btnLogin" class="btn btn-success btn-block" style="background-color:#85D1C5">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <form name="formLogin" action="/user.html" onsubmit="return validateForm()" method="POST">Name: <input type="text" name="fname">
+    <input type="submit" value="Submit"></form>
+    <script src="js/jquery-3.2.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    
+    <script>
+        $(document).ready(function () {
+            /*$('[data-toggle="tooltip"]').tooltip();*/
+            var url = "http://brendaguestbook.azurewebsites.net/tables/pengguna/";
+
+            var currId = "";
+
+            $("#btnLogin").click(function () {
+                do {
+                    cekUser()
+                } while (false);
+                function kirimUname() {
+                    document.formLogin.loginusername.val;
+                    document.formLogin.submit();
+                }
+                redirect(user.html);
+            });
+
+            $("#btnRegister").click(function () {
+                var ada;
+                var datanya = $("#email").val().toString();
+                if ($("#password1").val() == $("#confirm1").val()) {
+                    addDataUser();
+                }
+            }
+            );
+            
+            function addDataUser() {
+                var username = $("#username1").val();
+                var fullname = $("#fullname1").val();
+                var email1 = $("#email").val();
+                var password = $("#password1").val();
+
+                var newUser = {
+                    username: username,
+                    fullname: fullname,
+                    email: email1,
+                    password: password,
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: JSON.stringify(newUser),
+                    headers: {
+                        "ZUMO-API-VERSION": "2.0.0",
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Headers": "*"
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        alert("Data berhasil ditambah !");
+                        $("#modalRegister").modal('toggle');
+                        /*GetData();
+                        ClearAllData();*/
+                    },
+                    error: function (error) {
+                        var msg = error;
+                        alert("Kesalahan : " + msg.responseText);
+                    }
+                });
+            }
+
+            function getData() {
+                $("#tableGuestBook").empty();
+                var tblHeader = "<thead><tr>";
+                tblHeader += "<th>Username</th><th>Judul</th><th>Deskripsi</th>";
+                tblHeader += "</tr></thead>";
+                $("#tableGuestBook").append(tblHeader);
+            }
+
+            function cekUser() {
+                var password = $("#loginpassword").val();
+                var username = $("#loginusername").val();
+
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    headers: {
+                        "ZUMO-API-VERSION": "2.0.0",
+                        "Access-Control-Allow-Headers": "*"
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        $.each(data, function (key, value) {
+                            if ((username == value.username) && (password == value.password))
+                                break;
+                            /* open(file:///D:/Brenda%20files/Materi%20Kuliah/Semester%204/PBW%20-%20Pak%20Erick/TAS/user.html); masih bingung*/
+
+                            else {
+                                alert("Username or password you input was wrong. Please try again");
+                                $("#formLogin")[0].reset();
+                            }
+                        })
+                    },
+                })
+            }
+        });
+    </script>
+</body>
+
+</html>
+<!--mau nambahin carousel dibagian kanan dari web, panjang biru2nya dikecilin ;)-->

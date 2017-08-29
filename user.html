@@ -1,0 +1,381 @@
+<!DOCTYPE>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+
+        .row.content {
+            height: 1500px
+        }
+        /* Set gray background color and 100% height */
+
+        .sidenav {
+            background-color: #9aded3;
+            height: 100%;
+        }
+        /* Set black background color, white text and some padding */
+
+        footer {
+            background-color: #555;
+            color: white;
+            padding: 15px;
+        }
+        /* On small screens, set height to 'auto' for sidenav and grid */
+
+        @media screen and (max-width: 767px) {
+            .sidenav {
+                height: auto;
+                padding: 15px;
+            }
+            .row.content {
+                height: auto;
+            }
+        }
+
+        .modal-header,
+        h4,
+        .close {
+            background-color: #85D1C5;
+            color: white !important;
+            text-align: center;
+            font-size: 25px;
+        }
+
+        .modal-footer {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row content">
+            <div class="col-sm-3 sidenav">
+                <span class="glyphicons glyphicons-book-open"></span>
+                <a href="index.html">
+                    <h1>Guest Book <span class="glyphicon glyphicon-book"></span></h1>
+                </a>
+                <hr>
+                <ul class="nav nav-pills nav-stacked">
+                    <h4>Welcome!</h4>
+                    <h4>What do you want to do?</h4>
+                    <hr>
+                    <h4>Create guest book data</h4>
+                </ul>
+
+
+                <div class="input-group">
+                    <form id="coba">
+                        <div class="form-group">
+                            <label for="usernamenya">Username: </label>
+                            <input type="text" class="form-control" id="cobauser">
+                        </div>
+                        <div class="form-group">
+                            <label for="judul">Judul: </label>
+                            <input type="text" class="form-control" id="cobajudul">
+                        </div>
+                        <div class="form-group">
+                            <label for="desk">Desk: </label>
+                            <input type="text" class="form-control" id="cobadesk">
+                        </div>
+                        <button id="btnCoba" type="button" class="btn btn-warning">Simpan</button>
+                        <hr>
+                    </form>
+                    <button id="seedata1">See the guest book</button><br><br>
+                </div>
+                <div class="input-group">
+                    <input type="text" id="search" size="10px" class="form-control" placeholder="Search USERNAME here..">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                    </span>
+                </div>
+            </div>
+            <div class="row-content">
+                <div class="col-sm-5">
+                    <table id="tableData" class="table table-striped table-hover"></table>
+                </div>
+                <div class="col-sm-4">
+                    <h4>Edit Data</h4>
+                    <form id="formEdit">
+                        <div class="form-group">
+                            <label for="edit_user">Username: </label>
+                            <input type="text" class="form-control" id="edit_user">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_judul">Judul: </label>
+                            <input type="text" class="form-control" id="edit_judul">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_desk">Deskripsi: </label>
+                            <input type="text" class="form-control" id="edit_desk">
+                        </div>
+                        <div class="form-group">
+                            <label for="edit_tanggal">Tanggal: </label>
+                            <input type="text" class="form-control" id="edit_tanggal">
+                        </div>
+                        <button type="button" id="btnSave" class="btn btn-warning">Save</button>
+                        <button type="button" id="btnDelete" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+            <div id="modalCreate" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="padding: 25px 40px;">
+                            <button type="button" id="btnCari" class="close" data-dismiss="modal">&times;</button>
+                            <h4><span class="glyphicon glyphicon-user"></span> Create Data</h4>
+                        </div>
+                        <div class="modal-body">
+                            <form id="formLogin">
+                                <div class="form-group">
+                                    <label for="judul">Title: </label>
+                                    <input type="text" class="form-control" id="judul1" placeholder="Entry Title">
+                                </div>
+                                <div class="form-group">
+                                    <label for="deskripsi">Description: </label>
+                                    <input type="text" class="form-control" id="deskripsi1" placeholder="Entry Desc">
+                                </div>
+                                <button id="btnAdd1" class="btn btn-success btn-block" style="background-color:#85D1C5">Add</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.2.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script type='text/javascript'>
+        var months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth();
+        var yy = date.getYear();
+        var year = (yy < 1000) ? yy + 1900 : yy;
+        var tanggaljadi = day + " " + months[month] + " " + year;
+    </script>
+    <script>
+        $(document).ready(function () {
+            var currId;
+            var url = "http://brendaguestbook.azurewebsites.net/tables/bukutamu/";
+            // var alamat = new WindowsAzure.MobileServiceClient("http://brendaguestbook.azurewebsites.net");
+            //var table = client.getTable("bukutamu");
+            //table.read().then(success, failure);
+
+            $("#seedata1").click(function () {
+                getData();
+                alert("oi");
+            });
+
+            $("#btnCoba").click(function () {
+                var username = $("#cobauser").val();
+                var judul = $("#cobajudul").val();
+                var deskripsi = $("#cobadesk").val();
+                var tanggal = tanggaljadi;
+
+                var newData = {
+                    username: username,
+                    judul: judul,
+                    deskripsi: deskripsi,
+                    tanggal: tanggal
+                };
+                ClearAllData();
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: JSON.stringify(newData),
+                    headers: {
+                        "ZUMO-API-VERSION": "2.0.0",
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Headers": "*"
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        alert("data berhasil ditambah bor");
+                        getData();
+                        ClearAllData();
+                    },
+                    error: function (error) {
+                        var msg = error;
+                        alert("kesalahan: " + msg.responseText);
+                    }
+                });
+            })
+            $("#btnAdd1").click(function () {
+                alert("sukse");
+                addData();
+                getData();
+            });
+
+            //belum jadi
+            $("#btnCari").click(function () {
+                table.where(filterUsername, $("#search").val()).read().then(success, failure);
+            });
+
+            function filterUsername(currName) {
+                return this.username.toLowerCase().indexOf(currName) != -1;
+            }
+            //
+            function addData() {
+                var username = "brenda";
+                var judul = $("#judul1").val();
+                var deskripsi = $("#deskripsi1").val();
+                var tanggal = tanggaljadi;
+
+                var newData = {
+                    username: username,
+                    judul: judul,
+                    deskripsi: deskripsi,
+                    tanggal: tanggaljadi
+                };
+
+                $.ajax({
+                    type: "post",
+                    url: url,
+                    data: JSON.stringify(newData),
+                    headers: {
+                        "ZUMO-API-VERSION": "2.0.0",
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Headers": "*"
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        alert("Data berhasil ditambah !");
+                        $("#modalCreate").modal('toggle');
+                        getData();
+                        ClearAllData();
+                    },
+                    error: function (error) {
+                        var msg = error;
+                        alert("Kesalahan : " + msg.responseText);
+                    }
+                });
+            }
+
+            function ClearAllData() {
+                $("#formEdit")[0].reset();
+                $("#cobauser").val = " ";
+                $("#cobajudul").val = " ";
+                $("#cobadesk").val = " ";
+            }
+
+            $("#btnSave").click(function () {
+                editData();
+            })
+
+            $("#btnDelete").click(function () {
+                if (confirm('Are you sure?')) {
+                    deleteData();
+                }
+            });
+
+            function editData() {
+                var editData = {
+                    username: $("#edit_user").val(),
+                    judul: $("#edit_judul").val(),
+                    deskripsi: $("#edit_desk").val(),
+                    tanggal: $("#edit_tanggal").val()
+                }
+                $.ajax({
+                    type: "PATCH",
+                    url: url + currId,
+                    data: JSON.stringify(editData),
+                    headers: {
+                        "ZUMO-API-VERSION": "2.0.0",
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Headers": "*"
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        alert("Sukses");
+                        getData();
+                    },
+                    error: function (error) {
+                        var msg = error;
+                        alert("Kesalahan: " + msg.responseText);
+                    }
+                });
+            }
+
+            function deleteData() {
+                $.ajax({
+                    type: "DELETE",
+                    url: url + currId,
+                    headers: {
+                        "ZUMO-API-VERSION": "2.0.0",
+                        "Access-Control-Allow-Headers": "*"
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        alert("Data berhasil dihapus!");
+                        getData();
+                    },
+                    error: function (error) {
+                        var msg = JSON.parse(error);
+                        alert("Kesalahan: " + msg.responseText);
+                    }
+                });
+            }
+
+            $("#tableData").on("click", "tr", function () {
+                var id = $(this).closest('tr').attr('id');
+                currId = id;
+                var username = $(this).find("td").eq(0).text();
+                var judul = $(this).find("td").eq(1).text();
+                var deskripsi = $(this).find("td").eq(2).text();
+                var tanggal = $(this).find("td").eq(3).text();
+                $("#edit_user").val(username);
+                $("#edit_judul").val(judul);
+                $("#edit_desk").val(deskripsi);
+                $("#edit_tanggal").val(tanggal);
+            });
+
+            function getUsername(uname) {
+                return uname;
+            }
+
+            function getData() {
+                $("#tableData").empty();
+                var tblHeader = "<thead><tr>";
+                tblHeader += "<th>Username</th><th>Judul</th><th>Deskripsi</th><th>Tanggal</th>";
+                tblHeader += "</tr></thead>";
+                $("#tableData").append(tblHeader);
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    headers: {
+                        "ZUMO-API-VERSION": "2.0.0",
+                        "Access-Control-Allow-Headers": "*"
+                    },
+                    dataType: "json",
+                    success: function (data) {
+                        var result = "<tbody>";
+                        $.each(data, function (key, value) {
+                            result += "<tr id='" + value.id + "'>";
+                            result += "<td>" + value.username + "</td>";
+                            result += "<td>" + value.judul + "</td>";
+                            result += "<td>" + value.deskripsi + "</td>";
+                            result += "<td>" + value.tanggal + "</td>"
+                            result += "</tr>";
+                        });
+                        result += "</tbody>";
+                        $("#tableData").append(result);
+                    },
+                    error: function (error) {
+                        var msg = JSON.parse(Error);
+                        alert("Kesalahan : " + msg.responseText);
+                    }
+                });
+            }
+        });
+    </script>
+
+</body>
+
+</html>
